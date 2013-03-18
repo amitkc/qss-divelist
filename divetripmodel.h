@@ -27,6 +27,7 @@ public:
     float depth() const {return m_depth;}
     QString location() const {return m_location;}
     DiveItem * parent() const {return m_parent;}
+    DiveItem * itemForIndex(const QModelIndex &) const;
     // int row()?
 
 private:
