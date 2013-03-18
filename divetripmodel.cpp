@@ -1,13 +1,17 @@
 #include "divetripmodel.h"
 
+/* Item */
 DiveItem::DiveItem(int num, QString dt, float dur, float dep, QString loc, DiveItem *p):
     m_number(num), m_dateTime(dt), m_duration(dur), m_depth(dep), m_location(loc), m_parent(p)
 {
     /* nothing else? */
 }
 
-DiveTripModel::DiveTripModel(QObject *parent) : QAbstractItemModel(parent)
+
+/* Model */
+DiveTripModel::DiveTripModel(const QString &filename, QObject *parent) : QAbstractItemModel(parent), m_Filename(filename)
 {
+    m_RootItem = 0;
 }
 
 
@@ -43,7 +47,61 @@ QVariant DiveTripModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
+/* Row count of the item in the tree.
+ *
+ * This gives the row coordinates of any item directly underneath a particular item.
+ * It does not give a cumulative count of children and their children, for example.
+ *
+ * If we don't support dive trips then this must be zero.
+ *
+*/
 int DiveTripModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
+
     return 0;
 }
+
+
+
+/* Column count of the item in the tree.
+ *
+ * This is defined by the number of fields in a DiveItem
+ *
+*/
+int DiveTripModel::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+
+    return COLUMNS;
+}
+
+/* Index
+ *
+ * Unless we allow for Trips to be parents, the parent is always the root.
+ *
+*/
+QModelIndex DiveTripModel::index(int row, int column, const QModelIndex &parent) const
+{
+    Q_UNUSED(row)
+    Q_UNUSED(column)
+    Q_UNUSED(parent)
+
+    if (!m_RootItem || row < 0 || column < 0 || column >= COLUMNS
+            || ( parent.isValid() && parent.column() != 0) )
+        return QModelIndex();
+
+    return QModelIndex();
+
+}
+
+/* Parent
+
+  At present the parent is the invisible root with invalid QModelIndex
+
+*/
+QModelIndex DiveTripModel::parent(const QModelIndex &child) const
+{
+    return QModelIndex();
+}
+

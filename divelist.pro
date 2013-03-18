@@ -11,16 +11,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        widget.cpp \
     divelistview.cpp \
     divetripmodel.cpp
 
-HEADERS  += widget.h \
+HEADERS  += \
     divelistview.h \
     divetripmodel.h
 
-FORMS    += widget.ui
-
-
-
-
+FORMS    +=

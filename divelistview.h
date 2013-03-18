@@ -7,7 +7,10 @@
 
 
 */
-class DiveListView
+
+#include <QtGui/QTreeView>
+
+class DiveListView : public QTreeView
 {
 public:
     DiveListView();
