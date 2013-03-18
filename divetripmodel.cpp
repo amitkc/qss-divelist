@@ -115,11 +115,11 @@ QModelIndex DiveTripModel::parent(const QModelIndex &child) const
 DiveItem * DiveTripModel::itemForIndex(const QModelIndex &index) const
 {
     if (!index.isValid())
-        return QModelIndex();
+        return m_RootItem;
 
-    DiveItem * item = static_cast<DiveItem*> index.internalPointer();
+    DiveItem * item = static_cast<DiveItem*>(index.internalPointer());
     if (item)
         return item;
 
-    return QModelIndex();
+    return m_RootItem;
 }
