@@ -105,3 +105,21 @@ QModelIndex DiveTripModel::parent(const QModelIndex &child) const
     return QModelIndex();
 }
 
+
+/*! Translate a QModelIndex into an item pointer
+ *
+ * When we create a short-lived QMI we pass it row, col, parent and can add a pointer to provide
+ * direct access to an element and its methods. Here we retrieve the pointer that was stored in
+ * the QMI.
+*/
+DiveItem * DiveTripModel::itemForIndex(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return QModelIndex();
+
+    DiveItem * item = static_cast<DiveItem*> index.internalPointer();
+    if (item)
+        return item;
+
+    return QModelIndex();
+}
