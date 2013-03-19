@@ -4,7 +4,8 @@
 DiveItem::DiveItem(int num, QString dt, float dur, float dep, QString loc, DiveItem *p):
     m_number(num), m_dateTime(dt), m_duration(dur), m_depth(dep), m_location(loc), m_parent(p)
 {
-    /* nothing else? */
+    if (m_parent)
+        m_parent->addChild(this);
 }
 
 
@@ -26,7 +27,36 @@ Qt::ItemFlags DiveTripModel::flags(const QModelIndex &index) const
 
 QVariant DiveTripModel::data(const QModelIndex &index, int role) const
 {
-    return QVariant();
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    DiveItem *item = static_cast<DiveItem*>(index.internalPointer());
+
+    QVariant retVal;
+    switch( index.column())
+    {
+    case DIVE_NUMBER:
+        retVal = QVariant(item->diveNumber());
+        break;
+    case DIVE_DATE_TIME:
+        retVal = QVariant(item->dateTime());
+        break;
+    case DIVE_DURATION:
+        retVal = QVariant(item->duration());
+        break;
+    case DIVE_DEPTH:
+        retVal = QVariant(item->depth());
+        break;
+    case DIVE_LOCATION:
+        retVal = QVariant(item->location());
+        break;
+    default:
+        return QVariant();
+    };
+    return retVal;
 }
 
 QVariant DiveTripModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -91,6 +121,11 @@ QModelIndex DiveTripModel::index(int row, int column, const QModelIndex &parent)
             || ( parent.isValid() && parent.column() != 0) )
         return QModelIndex();
 
+    DiveItem *parentItem = itemForIndex(parent);
+    Q_ASSERT(parentItem);
+    if ( DiveItem *item = parentItem->childAt(row) )
+        createIndex(row, column, item);
+
     return QModelIndex();
 
 }
@@ -100,17 +135,29 @@ QModelIndex DiveTripModel::index(int row, int column, const QModelIndex &parent)
   At present the parent is the invisible root with invalid QModelIndex
 
 */
-QModelIndex DiveTripModel::parent(const QModelIndex &child) const
+QModelIndex DiveTripModel::parent(const QModelIndex &childIndex) const
 {
-    return QModelIndex();
+    if (!childIndex.isValid())
+        return QModelIndex();
+
+    DiveItem *child = static_cast<DiveItem*>(childIndex.internalPointer());
+    DiveItem *parent = child->parent();
+
+    if (parent == m_RootItem)
+        return QModelIndex();
+
+    return createIndex(parent->rowOfChild(child), 0, parent);
 }
 
 
 /*! Translate a QModelIndex into an item pointer
  *
- * When we create a short-lived QMI we pass it row, col, parent and can add a pointer to provide
- * direct access to an element and its methods. Here we retrieve the pointer that was stored in
- * the QMI.
+ * When we create a short-lived QModelIndex we pass it row, col, a pointer to provide direct
+ * access to an element and its methods. Here we retrieve the pointer that was stored in index.
+ *
+ * This is slightly confusing since in the context of a treemodel we think of the index in terms
+ * the rol, column and parent.
+ *
 */
 DiveItem * DiveTripModel::itemForIndex(const QModelIndex &index) const
 {

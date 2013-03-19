@@ -9,11 +9,17 @@
  * tidies up after it's children. This is done manually as we don't inherit from
  * QObject.
  *
+ * In order to manage the parent-child hierarchy and to provide an adequate set of
+ * methods for the model to use we have quite a few methods operating on the list of
+ * children the parents hold.
+ *
  * \todo Add to parent list when creating an item
  * \todo Consider adding a takeChildItem method (p158) - possibly not required if not doing drag, drop, delete?
  * \todo Consider addition of default constructor to enable container use outside of model.
  * \todo Consider stream operators
  *
+ * void addChild(DiveItem *) is called on the parent of newly created items. It adds the newly created item to
+ * the child list of the parent. The parent of the newly created item is set to be the item itself.
 */
 class DiveItem
 {
@@ -26,8 +32,15 @@ public:
     float duration() const {return m_duration;}
     float depth() const {return m_depth;}
     QString location() const {return m_location;}
-    DiveItem * parent() const {return m_parent;}
-    // int row()?
+
+    DiveItem *parent() const {return m_parent;}
+    DiveItem *childAt(int row) const {return m_children.value(row);}
+    int rowOfChild(DiveItem *child) const {return m_children.indexOf(child);}
+    int childCount() const {return m_children.count();}
+    bool hasChildren() const {return !m_children.isEmpty();}
+    QList<DiveItem *> children() const {return m_children;}
+    void addChild(DiveItem*item) {item->m_parent = this; m_children << item;} /* parent = self */
+
 
 private:
 
