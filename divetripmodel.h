@@ -24,6 +24,7 @@
 class DiveItem
 {
 public:
+    explicit DiveItem(): m_number(0), m_dateTime(QString()), m_duration(0.0), m_depth(0.0), m_location(QString()) {m_parent = 0;}
     explicit DiveItem(int num, QString dt, float, float, QString loc, DiveItem *parent = 0);
     ~DiveItem() { qDeleteAll(m_children); }
 

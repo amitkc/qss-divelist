@@ -1,5 +1,7 @@
 #include "divetripmodel.h"
 
+#include <QtDebug>
+
 /* Item */
 DiveItem::DiveItem(int num, QString dt, float dur, float dep, QString loc, DiveItem *p):
     m_number(num), m_dateTime(dt), m_duration(dur), m_depth(dep), m_location(loc), m_parent(p)
@@ -12,7 +14,8 @@ DiveItem::DiveItem(int num, QString dt, float dur, float dep, QString loc, DiveI
 /* Model */
 DiveTripModel::DiveTripModel(const QString &filename, QObject *parent) : QAbstractItemModel(parent), m_Filename(filename)
 {
-    m_RootItem = 0;
+    m_RootItem = new DiveItem;
+    qDebug() << "pointer to root item " << m_RootItem;
 }
 
 
@@ -87,9 +90,12 @@ QVariant DiveTripModel::headerData(int section, Qt::Orientation orientation, int
 */
 int DiveTripModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
-
-    return 0;
+    /* only allow kids in column 0 */
+    if (parent.isValid() && parent.column() > 0){
+        return 0;
+    }
+    DiveItem * item = itemForIndex(parent);
+    return item ? item->childCount() : 0;
 }
 
 
@@ -101,7 +107,8 @@ int DiveTripModel::rowCount(const QModelIndex &parent) const
 */
 int DiveTripModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
+    if (parent.isValid() && parent.column() > 0)
+        return 0;
 
     return COLUMNS;
 }
@@ -113,9 +120,9 @@ int DiveTripModel::columnCount(const QModelIndex &parent) const
 */
 QModelIndex DiveTripModel::index(int row, int column, const QModelIndex &parent) const
 {
-    Q_UNUSED(row)
-    Q_UNUSED(column)
-    Q_UNUSED(parent)
+//    Q_UNUSED(row)
+//    Q_UNUSED(column)
+//    Q_UNUSED(parent)
 
     if (!m_RootItem || row < 0 || column < 0 || column >= COLUMNS
             || ( parent.isValid() && parent.column() != 0) )

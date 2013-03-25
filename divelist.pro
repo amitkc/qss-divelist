@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui widgets
 
 TARGET = divelist
 TEMPLATE = app
@@ -14,8 +14,9 @@ SOURCES += main.cpp\
     divelistview.cpp \
     divetripmodel.cpp
 
-HEADERS  += \
-    divelistview.h \
+HEADERS  += divelistview.h \
     divetripmodel.h
 
 FORMS    +=
+
+CONFIG += DEBUG

@@ -8,7 +8,7 @@
 
 */
 
-#include <QtGui/QTreeView>
+#include <QTreeView>
 
 class DiveListView : public QTreeView
 {
