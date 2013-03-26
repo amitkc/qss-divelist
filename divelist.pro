@@ -20,3 +20,6 @@ HEADERS  += divelistview.h \
 FORMS    +=
 
 CONFIG += DEBUG
+
+OTHER_FILES += \
+    README.txt

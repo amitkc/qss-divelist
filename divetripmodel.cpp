@@ -1,7 +1,5 @@
 #include "divetripmodel.h"
 
-#include <QtDebug>
-
 /* Item */
 DiveItem::DiveItem(int num, QString dt, float dur, float dep, QString loc, DiveItem *p):
     m_number(num), m_dateTime(dt), m_duration(dur), m_depth(dep), m_location(loc), m_parent(p)
@@ -15,7 +13,6 @@ DiveItem::DiveItem(int num, QString dt, float dur, float dep, QString loc, DiveI
 DiveTripModel::DiveTripModel(const QString &filename, QObject *parent) : QAbstractItemModel(parent), m_Filename(filename)
 {
     m_RootItem = new DiveItem;
-    qDebug() << "pointer to root item " << m_RootItem;
 }
 
 
@@ -102,15 +99,14 @@ int DiveTripModel::rowCount(const QModelIndex &parent) const
 
 /* Column count of the item in the tree.
  *
- * This is defined by the number of fields in a DiveItem
+ * This is defined by the number of fields in a DiveItem but we
+ * need to protect against nonsensical requests.
  *
 */
 int DiveTripModel::columnCount(const QModelIndex &parent) const
 {
-    if (parent.isValid() && parent.column() > 0)
-        return 0;
+    return parent.isValid() && parent.column() != 0 ? 0 : COLUMNS;
 
-    return COLUMNS;
 }
 
 /* Index
@@ -120,9 +116,6 @@ int DiveTripModel::columnCount(const QModelIndex &parent) const
 */
 QModelIndex DiveTripModel::index(int row, int column, const QModelIndex &parent) const
 {
-//    Q_UNUSED(row)
-//    Q_UNUSED(column)
-//    Q_UNUSED(parent)
 
     if (!m_RootItem || row < 0 || column < 0 || column >= COLUMNS
             || ( parent.isValid() && parent.column() != 0) )
@@ -130,9 +123,9 @@ QModelIndex DiveTripModel::index(int row, int column, const QModelIndex &parent)
 
     DiveItem *parentItem = itemForIndex(parent);
     Q_ASSERT(parentItem);
-    if ( DiveItem *item = parentItem->childAt(row) )
-        createIndex(row, column, item);
-
+    if ( DiveItem *item = parentItem->childAt(row) ){
+        return createIndex(row, column, item);
+    }
     return QModelIndex();
 
 }
@@ -168,12 +161,9 @@ QModelIndex DiveTripModel::parent(const QModelIndex &childIndex) const
 */
 DiveItem * DiveTripModel::itemForIndex(const QModelIndex &index) const
 {
-    if (!index.isValid())
-        return m_RootItem;
-
-    DiveItem * item = static_cast<DiveItem*>(index.internalPointer());
-    if (item)
+    if (index.isValid()) {
+        DiveItem * item = static_cast<DiveItem*>(index.internalPointer());
         return item;
-
+    }
     return m_RootItem;
 }

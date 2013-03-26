@@ -13,9 +13,7 @@
  * methods for the model to use we have quite a few methods operating on the list of
  * children the parents hold.
  *
- * \todo Add to parent list when creating an item
  * \todo Consider adding a takeChildItem method (p158) - possibly not required if not doing drag, drop, delete?
- * \todo Consider addition of default constructor to enable container use outside of model.
  * \todo Consider stream operators
  *
  * void addChild(DiveItem *) is called on the parent of newly created items. It adds the newly created item to
