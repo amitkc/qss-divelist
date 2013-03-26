@@ -9,15 +9,6 @@
  * tidies up after it's children. This is done manually as we don't inherit from
  * QObject.
  *
- * In order to manage the parent-child hierarchy and to provide an adequate set of
- * methods for the model to use we have quite a few methods operating on the list of
- * children the parents hold.
- *
- * \todo Consider adding a takeChildItem method (p158) - possibly not required if not doing drag, drop, delete?
- * \todo Consider stream operators
- *
- * void addChild(DiveItem *) is called on the parent of newly created items. It adds the newly created item to
- * the child list of the parent. The parent of the newly created item is set to be the item itself.
 */
 class DiveItem
 {
@@ -54,11 +45,11 @@ private:
 
 };
 
+
 enum Column {DIVE_NUMBER, DIVE_DATE_TIME, DIVE_DURATION, DIVE_DEPTH, DIVE_LOCATION, COLUMNS};
 
+
 /*! An AbstractItemModel for recording dive trip information such as a list of dives.
- *
- * \todo Capture logic behind parent method and possibly others.
  *
 */
 class DiveTripModel : public QAbstractItemModel

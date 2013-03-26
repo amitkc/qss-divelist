@@ -13,23 +13,19 @@ int main(int argc, char *argv[])
     DiveItem* d2;
     DiveItem* d3;
 
-    /* Populate list with test dives starting with root*/
+    /* Populate list with random test dives */
     DiveItem * root = model->itemForIndex(QModelIndex());
     if (root){
-        d1 = new DiveItem(1,QString("01/03/13"),34.2, 49.0,QString("Wraysbury"),root);
-        d2 = new DiveItem(2,QString("01/03/13"),24.7, 32.5,QString("Wraysbury"),root);
-        d3 = new DiveItem(3,QString("01/03/13"),10.3, 42.7,QString("Wraysbury"),root);
-
-        qDebug() << d1->diveNumber() << " " << d1->dateTime() << " "<< d1->depth() << " "<< d1->duration() << " " << d1->location() << " " << d1->parent();
-        qDebug() << d2->diveNumber() << " " << d2->dateTime() << " "<< d2->depth() << " "<< d2->duration() << " " << d2->location() << " " << d2->parent();
-        qDebug() << d3->diveNumber() << " " << d3->dateTime() << " "<< d3->depth() << " "<< d3->duration() << " " << d3->location() << " " << d3->parent();
+        d1 = new DiveItem(1,QString("01/03/13"),14.2, 29.0,QString("Wraysbury"),root);
+        d2 = new DiveItem(2,QString("09/08/12"),22.7, 32.5,QString("Portland Harbour"),root);
+        d3 = new DiveItem(3,QString("01/10/12"),28.3, 16.7,QString("English Channel"),root);
 
     }
 
     DiveListView *view = new DiveListView();
     view->setModel(model);
     view->setCurrentIndex(QModelIndex());
-    view->setWindowTitle("Qt Subsurface Dive Trip TreeView");
+    view->setWindowTitle(QObject::tr("Qt Subsurface Dive Trip TreeView"));
     view->resize(600,400);
     view->move(550,350);
     view->show();

@@ -1,6 +1,6 @@
 #include "divetripmodel.h"
 
-/* Item */
+
 DiveItem::DiveItem(int num, QString dt, float dur, float dep, QString loc, DiveItem *p):
     m_number(num), m_dateTime(dt), m_duration(dur), m_depth(dep), m_location(loc), m_parent(p)
 {
@@ -9,7 +9,6 @@ DiveItem::DiveItem(int num, QString dt, float dur, float dep, QString loc, DiveI
 }
 
 
-/* Model */
 DiveTripModel::DiveTripModel(const QString &filename, QObject *parent) : QAbstractItemModel(parent), m_Filename(filename)
 {
     m_RootItem = new DiveItem;
@@ -24,6 +23,7 @@ Qt::ItemFlags DiveTripModel::flags(const QModelIndex &index) const
     }
     return diveFlags;
 }
+
 
 QVariant DiveTripModel::data(const QModelIndex &index, int role) const
 {
@@ -59,6 +59,7 @@ QVariant DiveTripModel::data(const QModelIndex &index, int role) const
     return retVal;
 }
 
+
 QVariant DiveTripModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if(orientation == Qt::Horizontal && role == Qt::DisplayRole){
@@ -77,14 +78,6 @@ QVariant DiveTripModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
-/* Row count of the item in the tree.
- *
- * This gives the row coordinates of any item directly underneath a particular item.
- * It does not give a cumulative count of children and their children, for example.
- *
- * If we don't support dive trips then this must be zero.
- *
-*/
 int DiveTripModel::rowCount(const QModelIndex &parent) const
 {
     /* only allow kids in column 0 */
@@ -97,23 +90,13 @@ int DiveTripModel::rowCount(const QModelIndex &parent) const
 
 
 
-/* Column count of the item in the tree.
- *
- * This is defined by the number of fields in a DiveItem but we
- * need to protect against nonsensical requests.
- *
-*/
 int DiveTripModel::columnCount(const QModelIndex &parent) const
 {
     return parent.isValid() && parent.column() != 0 ? 0 : COLUMNS;
 
 }
 
-/* Index
- *
- * Unless we allow for Trips to be parents, the parent is always the root.
- *
-*/
+
 QModelIndex DiveTripModel::index(int row, int column, const QModelIndex &parent) const
 {
 
@@ -130,11 +113,7 @@ QModelIndex DiveTripModel::index(int row, int column, const QModelIndex &parent)
 
 }
 
-/* Parent
 
-  At present the parent is the invisible root with invalid QModelIndex
-
-*/
 QModelIndex DiveTripModel::parent(const QModelIndex &childIndex) const
 {
     if (!childIndex.isValid())
@@ -150,15 +129,6 @@ QModelIndex DiveTripModel::parent(const QModelIndex &childIndex) const
 }
 
 
-/*! Translate a QModelIndex into an item pointer
- *
- * When we create a short-lived QModelIndex we pass it row, col, a pointer to provide direct
- * access to an element and its methods. Here we retrieve the pointer that was stored in index.
- *
- * This is slightly confusing since in the context of a treemodel we think of the index in terms
- * the rol, column and parent.
- *
-*/
 DiveItem * DiveTripModel::itemForIndex(const QModelIndex &index) const
 {
     if (index.isValid()) {
