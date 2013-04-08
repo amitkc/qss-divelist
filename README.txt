@@ -1,7 +1,7 @@
 Qt Subsurface - An Open Source Port of the Subsurface Dive Log Application
 --------------------------------------------------------------------------
 
-At www.hohndel.org you can find details of the original subsurface project
+At subsurface.hohndel.org you can find details of the original subsurface project
 based on the GTK2+ graphics toolkit.
 
 During development, several of the contributors to that project had issues
